@@ -9,7 +9,9 @@ const login = async (req, res, next) => {
     if (user) {
       const is_password_same = await bcrypt.compare(password, user.password);
       if (is_password_same) {
-        const token = jwt.sign({ user_id: user._id, full_name: user.full_name, email: user.email }, 'PET_SECRET');
+        const token = jwt.sign({
+          user_id: user._id, full_name: user.full_name, email: user.email, phone_number: user.phone,
+        }, 'PET_SECRET');
         res.status(200).json({ token });
       } else {
         res.status(404).json({ message: 'User not found' });
@@ -32,7 +34,9 @@ const signup = async (req, res, next) => {
     const user = await User.create({
       email, password: hash_password, full_name, phone_number,
     });
-    const token = jwt.sign({ user_id: user._id, full_name: user.full_name, email: user.email }, 'PET_SECRET');
+    const token = jwt.sign({
+      user_id: user._id, full_name: user.full_name, email: user.email, phone_number: user.phone,
+    }, 'PET_SECRET');
     res.status(200).json({ token });
   } catch (err) {
     next(err);

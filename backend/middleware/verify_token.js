@@ -5,6 +5,7 @@ const verify_toke = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, 'PET_SECRET');
     if (decoded.user_id) {
+      req.user = decoded;
       next();
     } else {
       res.json({ message: 'Invalid token' });
