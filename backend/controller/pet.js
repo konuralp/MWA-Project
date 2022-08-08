@@ -5,7 +5,7 @@ const Pet = require('../model/pet');
 const storageRef = admin.storage().bucket(process.env.BUCKET_URL);
 
 const get_all_pets = async (req, res, next) => {
-  const { skip } = req.query;
+  const { skip, limit } = req.query;
   let query = {};
   const breed = req.query.breed ? { breed: req.query.breed } : null;
   query = { ...query, ...breed };
@@ -27,8 +27,8 @@ const get_all_pets = async (req, res, next) => {
   query = { ...query, available: true };
 
   try {
-    const pets = await Pet.find(query).limit(10).skip(skip);
-    res.json({ pets });
+    const pets = await Pet.find(query).limit(limit || 10).skip(skip);
+    res.json(pets);
   } catch (err) {
     next(err);
   }
