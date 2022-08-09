@@ -1,3 +1,3 @@
 export const AppSettings = Object.freeze({
-  BASE_API_URL: 'http://localhost:3000/',
+  BASE_API_URL: 'https://mwa-pet-adoption.herokuapp.com/',
 });
