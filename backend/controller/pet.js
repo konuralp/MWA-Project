@@ -7,13 +7,17 @@ const storageRef = admin.storage().bucket(process.env.BUCKET_URL);
 const get_all_pets = async (req, res, next) => {
   const { skip, limit } = req.query;
   let query = {};
-  const breed = req.query.breed ? { breed: req.query.breed } : null;
+  const breed = req.query.breed ? { breed: { $regex: new RegExp(req.query.breed, 'i') } } : null;
   query = { ...query, ...breed };
-  const category = req.query.category ? { category: req.query.category } : null;
+  const category = req.query.category ? { category: { $regex: new RegExp(req.query.category, 'i') } } : null;
   query = { ...query, ...category };
+  const behaviors = req.query.behaviors ? { behaviors: { $regex: new RegExp(req.query.behaviors, 'i') } } : null;
+  query = { ...query, ...behaviors };
+  const size = req.query.size ? { size: req.query.size } : null;
+  query = { ...query, ...size };
   const zip_code = req.query.zip_code ? { zip_code: req.query.zip_code } : null;
   query = { ...query, ...zip_code };
-  const state = req.query.state ? { state: req.query.state } : null;
+  const state = req.query.state ? { state: { $regex: new RegExp(req.query.state, 'i') } } : null;
   query = { ...query, ...state };
   const latitude = req.query.latitude ? req.query.latitude : null;
   const longitude = req.query.longitude ? req.query.longitude : null;
@@ -65,10 +69,10 @@ const add_pets = async (req, res, next) => {
     await Pet.create({
       name,
       bio,
-      category: category,
-      gender: gender,
+      category,
+      gender,
       zip_code,
-      state: state,
+      state,
       breed,
       age,
       size,
@@ -90,11 +94,10 @@ const add_pets = async (req, res, next) => {
 };
 
 const get_one_pet = async (req, res, next) => {
-  const { user } = req;
   const { id } = req.params;
   try {
-    const pets = await Pet.find({ 'owner._id': user.user_id, _id: id });
-    res.json({ pets });
+    const pets = await Pet.findOne({ _id: id });
+    res.json(pets);
   } catch (err) {
     next(err);
   }

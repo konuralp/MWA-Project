@@ -6,7 +6,7 @@ import {Router} from "@angular/router";
 @Component({
   selector: 'app-bottom-bar',
   template: `
-    <div class="fab-button-container" matTooltip="Post a pet for adoption" [routerLink]="['pets', 'add']">
+    <div class="fab-button-container" matTooltip="Post a pet for adoption" [routerLink]="['/pets', 'add']">
       <button mat-fab color="accent" aria-label="Post pet for adoption">
         <mat-icon>add</mat-icon>
       </button>
