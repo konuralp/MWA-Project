@@ -4,6 +4,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {PetsService} from "./pets.service";
 import {Pet} from "./PetInterface";
+import {LocationService} from "./location.service";
 
 @Component({
   selector: 'app-pet-add-page',
@@ -42,8 +43,11 @@ import {Pet} from "./PetInterface";
           <ng-template matStepLabel>Fill out details</ng-template>
           <mat-form-field appearance="fill">
             <mat-label>Category</mat-label>
-            <input matInput formControlName="category" placeholder="Ex. Dog"
-                   required>
+            <mat-select formControlName="category" placeholder="Ex. Dog"
+                        required>
+              <mat-option value="Dog">Dog</mat-option>
+              <mat-option value="Cat">Cat</mat-option>
+            </mat-select>
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Breed</mat-label>
@@ -86,7 +90,7 @@ import {Pet} from "./PetInterface";
       </mat-step>
       <mat-step [stepControl]="addressFormGroup">
         <form [formGroup]="addressFormGroup">
-          <ng-template matStepLabel>Fill out short bio of your pet</ng-template>
+          <ng-template matStepLabel>Fill out your address</ng-template>
           <mat-form-field appearance="fill">
             <mat-label>Zipcode</mat-label>
             <input matInput type="number" formControlName="zip_code" placeholder="Ex. 94043"
@@ -98,6 +102,11 @@ import {Pet} from "./PetInterface";
                         required>
               <mat-option *ngFor="let state of usaStateNames" [value]="state">{{state}}</mat-option>
             </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Location</mat-label>
+            <input matInput formControlName="location" [readonly]="true" (click)="addLocation()" placeholder="Please Click to Add Location"
+                        required>
           </mat-form-field>
           <div>
             <button mat-button matStepperPrevious>Back</button>
@@ -179,6 +188,7 @@ export class PetAddPageComponent implements OnInit {
   addressFormGroup = this.fb.group({
     zip_code: [null, [Validators.required, Validators.pattern(/(^\d{5}$)|(^\d{5}-\d{4}$)/)]],
     state: ['', Validators.required],
+    location: ['', Validators.required],
   });
   imagesFormGroup = this.fb.group({
     image1: [null, [Validators.required]],
@@ -186,8 +196,9 @@ export class PetAddPageComponent implements OnInit {
     image3: [null],
   });
   images: any[] = [null, null, null];
+  location: { lat: number, lng: number } | null = null;
 
-  constructor(private fb: FormBuilder, private petsService: PetsService,
+  constructor(private fb: FormBuilder, private petsService: PetsService, private locationService: LocationService,
               private _snackBar: MatSnackBar, private router: Router) {
   }
 
@@ -209,8 +220,8 @@ export class PetAddPageComponent implements OnInit {
       zip_code: this.addressFormGroup.value.zip_code! as string,
       state: this.addressFormGroup.value.state as string,
       available: true,
-      latitude: 1.234234 as number,
-      longitude: 1.234234 as number,
+      latitude: this.location!.lat as number,
+      longitude: this.location!.lng as number,
     } as Pet;
     const fd = new FormData();
     for (let image of images) {
@@ -239,6 +250,15 @@ export class PetAddPageComponent implements OnInit {
   fileChanged(event: any, index: number) {
     const file: File = event.target.files[0];
     this.images[index - 1] = file;
+  }
+
+  addLocation() {
+    this.locationService.getLocation().subscribe(location => {
+      this.location = location;
+      this.addressFormGroup.patchValue({
+        location: location.lat + ', ' + location.lng,
+      })
+    });
   }
 
 }

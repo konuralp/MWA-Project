@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {AppSettings} from "../../appSettings";
 import {Pet} from "./PetInterface";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +30,8 @@ export class PetsService {
     return this.http.get<Array<Pet>>(AppSettings.BASE_API_URL + 'pets/search'+queryStr);
   }
 
-  getPet(pet_id: number) {
-    return this.http.get<Pet>(AppSettings.BASE_API_URL + 'pets/' + pet_id);
+  getPet(pet_id: string) {
+    return this.http.get<Pet>(AppSettings.BASE_API_URL + 'pets/' + pet_id) as Observable<Pet>;
   }
 
   listUserPets() {

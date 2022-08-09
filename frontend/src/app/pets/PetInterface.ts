@@ -7,7 +7,7 @@ export interface Pet {
   gender: string;
   zip_code: string;
   state: string;
-  location?: [number, number];
+  location?: { $numberDecimal: string }[];
   latitude?: number;
   longitude?: number;
   age: number;

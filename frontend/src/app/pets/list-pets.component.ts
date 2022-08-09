@@ -16,7 +16,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     <div class="loadMore" fxLayout="row" fxLayoutAlign="center">
       <mat-progress-bar *ngIf="skipping && !endOfList" mode="indeterminate"></mat-progress-bar>
       <button mat-raised-button color='primary' (click)="loadMore()" *ngIf="!skipping && !endOfList">Load more</button>
-      <p *ngIf="endOfList">You are at the end of list 😔.</p>
+      <p *ngIf="endOfList">You have reached to the end of list 😔.</p>
     </div>
     <div class="spacer"></div>
   `,
