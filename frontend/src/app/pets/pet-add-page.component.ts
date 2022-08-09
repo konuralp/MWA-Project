@@ -9,7 +9,7 @@ import {LocationService} from "./location.service";
 @Component({
   selector: 'app-pet-add-page',
   template: `
-    <mat-stepper orientation="vertical" [linear]="false" #stepper>
+    <mat-stepper orientation="vertical" [linear]="true" #stepper>
       <mat-step [stepControl]="nameFormGroup">
         <form [formGroup]="nameFormGroup">
           <ng-template matStepLabel>Fill out your pet's name</ng-template>
