@@ -10,7 +10,7 @@ import {ActivatedRoute} from "@angular/router";
         <mat-form-field appearance="fill">
           <mat-label>Start searching for pets 🐶, 😺!</mat-label>
           <input matInput #input maxlength="50" placeholder="Ex. Terrier, Bichon Frise, Maltese">
-          <button mat-icon-button color="primary" matSuffix mat-button [routerLink]="['/search']" [queryParams]="{breed: input.value ? input.value : undefined}">
+          <button mat-icon-button color="primary" matSuffix mat-button [routerLink]="['/pets', 'search']" [queryParams]="{breed: input.value ? input.value : undefined}">
             <mat-icon>search</mat-icon>
           </button>
         </mat-form-field>
@@ -32,7 +32,7 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class SearchPetsComponent implements OnInit {
 
-  constructor(private petService: PetsService, private route: ActivatedRoute) {
+  constructor() {
   }
 
   ngOnInit(): void {

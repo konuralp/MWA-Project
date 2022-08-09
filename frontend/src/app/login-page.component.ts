@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {UserService} from './user.service';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login-page',
@@ -9,22 +11,23 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
         <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
           <h2>Log In</h2>
           <mat-error *ngIf="!loginValid">
-            The username and/or password is incorrect.
+            {{loginErrText}}
           </mat-error>
           <mat-form-field>
             <input matInput placeholder="Email" name="email" formControlName="email" required>
             <mat-error>
-              Please provide a valid email address.
+              Please enter a valid email address.
             </mat-error>
           </mat-form-field>
           <mat-form-field>
             <input matInput type="password" placeholder="Password" name="password" formControlName="password" required>
             <mat-error>
-              Password must be at least 6 characters long.
+              Password is required.
             </mat-error>
           </mat-form-field>
           <button mat-raised-button color="primary" [disabled]="!loginForm.valid">Login</button>
         </form>
+        <p>Don't have an account? <a [routerLink]="['/signup']">Sign Up.</a></p>
       </mat-card-content>
     </mat-card>
   `,
@@ -43,23 +46,33 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
   ]
 })
 export class LoginPageComponent implements OnInit {
-
+  loginErrText: string = '';
   loginValid: boolean = true;
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {
-  }
+  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: ['', Validators.email],
-      password: ['', [Validators.minLength(6), Validators.required]]
+      password: ['', [Validators.minLength(0), Validators.required]]
     });
   }
 
   login() {
-    console.log(this.loginForm.value);
-    this.loginValid = false;
+    this.userService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
+        next: (res: any) => {
+          this.userService.userState$.next(res);
+          this.userService.persistState();
+          this.loginValid = true;
+          this.router.navigate(['/pets']);
+        },
+        error: (err: any) => {
+          this.loginErrText = err.error.message as string;
+          this.loginValid = false;
+          console.log(err.error.message);
+        }
+      });
   }
 
 }

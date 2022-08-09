@@ -18,7 +18,7 @@ const Pet = new Schema({
   location: [Schema.Types.Decimal128],
   breed: String,
   age: Number,
-  size: Number,
+  size: String,
   behaviors: String,
   images: [String],
   available: Boolean,
