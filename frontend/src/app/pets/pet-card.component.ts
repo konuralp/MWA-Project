@@ -8,24 +8,26 @@ import {Pet} from "./PetInterface";
       <mat-card-header>
 <!--        <div mat-card-avatar class="pet-header-image"></div>-->
         <mat-card-title>{{pet.name}}</mat-card-title>
-        <mat-card-subtitle>{{pet.category}}</mat-card-subtitle>
+        <mat-card-subtitle>{{pet.category}} - {{pet.breed}}</mat-card-subtitle>
       </mat-card-header>
-      <img mat-card-image src="{{pet.images[0]}}" alt="Photo of {{pet.name}}">
       <mat-card-content>
+        <img mat-card-image src="{{pet.images[0]}}" alt="Photo of {{pet.name}}">
         <p>
           {{(pet.bio | slice:0:50)+'...'}}
         </p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-raised-button>LIKE</button>
-        <button mat-raised-button>SHARE</button>
       </mat-card-actions>
     </mat-card>
   `,
   styles: [
-    `.pet-card {
-      max-width: 400px;
-    }
+    `
+      img{
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+      }
+
     `
   ]
 })

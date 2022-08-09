@@ -41,7 +41,7 @@ const add_pets = async (req, res, next) => {
     gender, zip_code, state,
     breed, age, size, behaviors,
     latitude, longitude,
-  } = req.body;
+  } = JSON.parse(req.body.pet);
   const urls = [];
 
   await Promise.all(files.map(async (file) => {
@@ -65,10 +65,10 @@ const add_pets = async (req, res, next) => {
     await Pet.create({
       name,
       bio,
-      category: category.toUpperCase(),
-      gender: gender.toUpperCase(),
+      category: category,
+      gender: gender,
       zip_code,
-      state: state.toUpperCase(),
+      state: state,
       breed,
       age,
       size,
